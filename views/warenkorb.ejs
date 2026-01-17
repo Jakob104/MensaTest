@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="de">
+<%- include('partials/head') %>
+<body>
+
+    <%- include('partials/navbar') %>
+
+    <div class="container">
+        <h1 style="color: #ff6600;">Dein Einkaufswagen 🛒</h1>
+
+        <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+            <thead>
+                <tr style="background: #eee; text-align: left;">
+                    <th style="padding: 10px;">Produkt</th>
+                    <th style="padding: 10px;">Preis</th>
+                    <th style="padding: 10px;">Menge</th>
+                    <th style="padding: 10px;">Gesamt</th>
+                    <th style="padding: 10px;">Aktion</th>
+                </tr>
+            </thead>
+            <tbody id="cart-items">
+                </tbody>
+        </table>
+
+        <div style="margin-top: 30px; text-align: right;">
+            <h2>Gesamtsumme: € <span id="cart-total">0,00</span></h2>
+            
+            <button class="btn" style="background-color: #333; margin-right: 10px;" onclick="clearCart()">Alles löschen</button>
+            <a href="/checkout" class="btn" style="font-size: 1.2rem; text-decoration: none;">
+    Zur Kasse gehen &rarr;
+    </a>
+        </div>
+    </div>
+
+    <script>
+        function renderCart() {
+            const cart = getCart(); // Funktion aus main.js
+            const tbody = document.getElementById('cart-items');
+            const totalSpan = document.getElementById('cart-total');
+            
+            tbody.innerHTML = ''; // Tabelle leeren
+            let total = 0;
+
+            if (cart.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="padding:20px; text-align:center;">Dein Warenkorb ist leer 😢</td></tr>';
+            }
+
+            cart.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+
+                tbody.innerHTML += `
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 10px;">${item.name}</td>
+                        <td style="padding: 10px;">€ ${item.price.toFixed(2)}</td>
+                        <td style="padding: 10px;">${item.quantity}x</td>
+                        <td style="padding: 10px; font-weight:bold;">€ ${itemTotal.toFixed(2)}</td>
+                        <td style="padding: 10px;">
+                            <button onclick="removeItem('${item.id}')" style="background:red; color:white; border:none; padding:5px 10px; cursor:pointer; border-radius:3px;">X</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            totalSpan.innerText = total.toFixed(2).replace('.', ',');
+        }
+
+        // Artikel entfernen
+        function removeItem(id) {
+            let cart = getCart();
+            cart = cart.filter(item => item.id != id); // Alle behalten, außer den mit der ID
+            saveCart(cart);
+            renderCart(); // Tabelle neu zeichnen
+        }
+
+        // Alles löschen
+        function clearCart() {
+            saveCart([]);
+            renderCart();
+        }
+
+        // Bestellen (Dummy)
+        async function checkout() {
+            const cart = getCart();
+            if (cart.length === 0) return alert("Der Warenkorb ist leer!");
+
+            // Wir fragen kurz nach dem Namen (später kommt das aus dem Login)
+            const customerName = prompt("Bitte gib deinen Namen ein:");
+            if (!customerName) return;
+
+            // Daten an den Server senden
+            try {
+                const response = await fetch('/api/bestellen', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        customerName: customerName,
+                        cart: cart
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert("✅ Bestellung erfolgreich! Nummer: " + result.orderId);
+                    clearCart(); // Warenkorb leeren
+                    window.location.href = "/"; // Zur Startseite
+                } else {
+                    alert("❌ Fehler: " + result.error);
+                }
+
+            } catch (err) {
+                console.error(err);
+                alert("Verbindungsfehler zum Server.");
+            }
+        }
+
+        // Beim Laden der Seite ausführen
+        document.addEventListener('DOMContentLoaded', function() {
+        renderCart();
+});
+    </script>
+
+</body>
+</html>

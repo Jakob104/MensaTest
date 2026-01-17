@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="de">
+<%- include('partials/head') %>
+<body>
+
+    <%- include('partials/navbar') %>
+
+    <div class="container" style="text-align: center; margin-top: 60px;">
+        
+        <h1 style="margin-bottom: 10px; font-size: 2.5rem;">Hallo, Chef! 👨‍🍳</h1>
+        <p style="color: #64748b; font-size: 1.2rem; margin-bottom: 50px;">Was möchtest du verwalten?</p>
+
+        <div class="grid-container" style="max-width: 900px; margin: 0 auto; gap: 30px;">
+            
+            <a href="/admin/orders" style="text-decoration: none; color: inherit;">
+                <div class="card" style="padding: 40px; text-align: center; height: 100%; transition: transform 0.2s;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">🛎️</div>
+                    <h2 style="color: #2563eb;">Bestellungen</h2>
+                    <p>Eingehende Bestellungen ansehen und abhaken.</p>
+                    <button class="btn" style="margin-top: 20px;">Öffnen &rarr;</button>
+                </div>
+            </a>
+
+            <a href="/admin/plan" style="text-decoration: none; color: inherit;">
+                <div class="card" style="padding: 40px; text-align: center; height: 100%; transition: transform 0.2s;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">📅</div>
+                    <h2 style="color: #2563eb;">Wochenplan</h2>
+                    <p>Festlegen, was es nächste Woche zu essen gibt.</p>
+                    <button class="btn btn-outline" style="margin-top: 20px;">Planen &rarr;</button>
+                </div>
+            </a>
+
+            <a href="/admin/dishes" style="text-decoration: none; color: inherit;">
+                <div class="card" style="padding: 40px; text-align: center; height: 100%; transition: transform 0.2s;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">🍲</div>
+                    <h2 style="color: #2563eb;">Speisekarte</h2>
+                    <p>Neue Gerichte erfinden oder Preise ändern.</p>
+                    <button class="btn btn-outline" style="margin-top: 20px;">Verwalten &rarr;</button>
+                </div>
+            </a>
+
+        </div>
+
+        <div style="margin-top: 60px;">
+            <a href="/" style="color: #94a3b8; text-decoration: none;">&larr; Zurück zur Startseite</a>
+        </div>
+
+    </div>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

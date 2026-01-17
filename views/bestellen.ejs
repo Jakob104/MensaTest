@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de">
+<%- include('partials/head') %>
+<body>
+    <%- include('partials/navbar') %>
+
+    <div class="container">
+        <h1 style="text-align:center; margin-bottom: 10px;">Snacks & Drinks 🥨</h1>
+        <p style="text-align:center; margin-bottom: 40px;">Abholbar ab 07:30 Uhr.</p>
+
+        <div style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); border-radius: 16px; padding: 30px; color: white; text-align: center; margin-bottom: 40px; box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);">
+            <h2 style="color: white; margin-top: 0;">Nichts passendes dabei?</h2>
+            <p style="color: rgba(255,255,255,0.9);">Bau dir dein Weckerl genau so, wie du es magst!</p>
+            <a href="/builder" class="btn" style="background: white; color: #2563eb; margin-top: 10px; font-weight: bold;">
+                🛠️ Jetzt Weckerl zusammenstellen
+            </a>
+        </div>
+
+        <div class="grid-container">
+            <% products.forEach(function(product) { %>
+                <div class="card">
+                    <div class="card-content">
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div>
+                                <h3 style="margin: 0 0 5px 0;"><%= product.name %></h3>
+                                <p style="margin: 0; font-size: 0.9rem;"><%= product.description %></p>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; border-top: 1px solid #f1f5f9; padding-top: 15px;">
+                            <span class="price-tag" style="font-size: 1.3rem;">€ <%= product.price.toFixed(2) %></span>
+                            
+                            <button class="btn btn-outline" style="padding: 8px 16px; font-size: 0.9rem;" 
+                                onclick="addToCart('<%= product.id %>', '<%= product.name %>', <%= product.price %>, 'snack')">
+                                + Korb
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

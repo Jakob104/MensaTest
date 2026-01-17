@@ -1,0 +1,426 @@
+/* --- MODERN BLUE THEME DESIGN SYSTEM --- */
+
+:root {
+    --primary: #2563eb;       /* Royal Blue */
+    --primary-dark: #1e40af;  /* Dunkleres Blau */
+    --accent: #3b82f6;        /* Akzent */
+    
+    --bg-body: #f8fafc;       /* Hintergrund */
+    --bg-card: #ffffff;       /* Karten Hintergrund */
+    
+    --text-main: #0f172a;     /* Fast Schwarz */
+    --text-muted: #64748b;    /* Grau */
+    
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+    
+    --radius: 16px;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- TYPOGRAFIE --- */
+h1, h2, h3 {
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin-bottom: 0.5em;
+    color: var(--text-main);
+}
+
+h1 { 
+    font-size: 2.5rem; 
+    background: linear-gradient(to right, var(--text-main), var(--primary)); 
+    -webkit-background-clip: text; 
+    background-clip: text; 
+    -webkit-text-fill-color: transparent; 
+    display: inline-block; 
+}
+
+h2 { font-size: 1.8rem; }
+h3 { margin-top: 0; }
+p { color: var(--text-muted); margin-bottom: 1rem; }
+
+/* --- LAYOUT --- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    width: 90%;
+}
+
+main {
+    flex: 1;
+}
+
+/* --- NAVBAR --- */
+nav {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 0.8rem 0;
+}
+
+nav .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav .logo a {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+}
+
+nav ul li a:hover {
+    color: var(--primary);
+}
+
+/* Warenkorb Button */
+.cart-btn {
+    background: var(--text-main);
+    color: white !important;
+    padding: 8px 16px;
+    border-radius: 99px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+}
+
+.cart-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    background: var(--primary);
+}
+
+#cart-count {
+    background: white;
+    color: var(--text-main);
+    font-size: 0.75rem;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+/* --- CARDS & GRID --- */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.04);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Gleich hoch */
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary);
+}
+
+/* WICHTIG: Padding für den Inhalt, da wir keine Bilder mehr haben */
+.card-content {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+}
+
+.price-tag {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--text-main);
+}
+
+/* --- BUILDER STYLES (Wunsch-Weckerl) --- */
+.option-row {
+    display: flex; 
+    align-items: center; 
+    padding: 12px; 
+    border: 1px solid #e2e8f0; 
+    border-radius: 12px; 
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 8px;
+    background: white;
+}
+
+.option-row:hover { 
+    background: #eff6ff; 
+    border-color: var(--primary); 
+}
+
+.option-row input { 
+    margin-right: 15px; 
+    width: 18px; 
+    height: 18px; 
+    accent-color: var(--primary);
+}
+
+.option-row .price { 
+    margin-left: auto; 
+    font-weight: bold; 
+    color: var(--text-muted); 
+}
+
+/* --- BUTTONS --- */
+.btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    background: var(--text-main);
+    color: white;
+}
+
+.btn:hover {
+    background: var(--primary);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.btn:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--text-main);
+    color: var(--text-main);
+}
+
+.btn-outline:hover {
+    background: var(--text-main);
+    color: white;
+}
+
+/* --- TABELLEN --- */
+.table-wrapper {
+    overflow-x: auto;
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    border: 1px solid #e2e8f0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    min-width: 600px; /* Damit man auf Handy scrollen kann */
+}
+
+thead {
+    background: var(--text-main);
+    color: white;
+}
+
+th, td {
+    padding: 16px 20px;
+    text-align: left;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+tr:last-child td { border-bottom: none; }
+tr:hover td { background-color: #f8fafc; }
+
+/* Status Badges für Admin/Profil */
+.badge-open {
+    background: #fee2e2; 
+    color: #ef4444; 
+    padding: 4px 10px; 
+    border-radius: 99px; 
+    font-size: 0.75rem; 
+    font-weight: 800; 
+    letter-spacing: 0.5px;
+}
+
+.badge-done {
+    background: #dcfce7; 
+    color: #16a34a; 
+    padding: 4px 10px; 
+    border-radius: 99px; 
+    font-size: 0.75rem; 
+    font-weight: 800; 
+    letter-spacing: 0.5px;
+}
+
+.badge-info {
+    background: #eff6ff; 
+    color: #2563eb; 
+    padding: 3px 8px; 
+    border-radius: 6px; 
+    font-size: 0.8rem; 
+    font-weight: 600;
+}
+
+/* --- FORMULARE --- */
+input[type="text"], 
+input[type="password"], 
+input[type="email"], 
+input[type="number"], 
+input[type="date"], 
+select {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+    outline: none;
+    box-sizing: border-box;
+    font-family: inherit;
+    background: white;
+}
+
+input:focus, select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+    color: var(--text-main);
+}
+
+/* --- FOOTER --- */
+footer {
+    background: var(--text-main);
+    color: white;
+    padding: 60px 0 30px 0;
+    margin-top: 80px;
+    text-align: center;
+}
+
+footer p { color: #94a3b8; }
+footer a { color: #64748b; text-decoration: none; transition: color 0.3s; }
+footer a:hover { color: white; }
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+    nav .container { flex-direction: column; gap: 15px; }
+    .grid-container { grid-template-columns: 1fr; }
+    h1 { font-size: 2rem; }
+}
+
+/* --- TOAST NOTIFICATIONS (Meldungen) --- */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    background: white;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 300px;
+    transform: translateX(120%);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border-left: 5px solid #ccc;
+    font-weight: 500;
+}
+
+.toast.show { transform: translateX(0); }
+
+.toast.success { border-left-color: #22c55e; } /* Grün */
+.toast.error   { border-left-color: #ef4444; } /* Rot */
+.toast.info    { border-left-color: #3b82f6; } /* Blau */
+
+/* --- CUSTOM CONFIRM MODAL (Bestätigung) --- */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 10000;
+    display: none; /* Versteckt */
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+
+.modal-box {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+    animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}

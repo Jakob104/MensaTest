@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="de">
+<%- include('partials/head') %>
+<body>
+
+    <%- include('partials/navbar') %>
+
+    <div class="container">
+        <div style="margin-top: 40px; margin-bottom: 30px;">
+            <h1 style="margin: 0;">Speisekarte 🍲</h1>
+            <p style="margin: 0; color: #64748b;">Verwaltung der Mittagsgerichte (Einheitspreis: 5,20 €)</p>
+        </div>
+
+        <div class="grid-container" style="margin-top: 0; grid-template-columns: 1fr 2fr; gap: 40px; align-items: start;">
+            
+            <div class="card" style="padding: 30px; position: sticky; top: 100px;">
+                <h2 style="font-size: 1.5rem; margin-top: 0;">Neu anlegen</h2>
+                <form onsubmit="createDish(event)">
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-weight: bold; display: block; margin-bottom: 5px;">Name des Gerichts</label>
+                        <input type="text" id="newName" required placeholder="z.B. Rindergulasch">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="font-weight: bold; display: block; margin-bottom: 5px;">Beschreibung</label>
+                        <input type="text" id="newDesc" placeholder="z.B. mit Semmelknödel">
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="font-weight: bold; display: block; margin-bottom: 5px;">Preis (€)</label>
+                        <input type="number" id="newPrice" step="0.10" required value="5.20" 
+                               style="width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 1rem;">
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%;">
+                        + Speichern
+                    </button>
+                </form>
+            </div>
+
+            <div>
+                <h2 style="font-size: 1.5rem; margin-top: 0;">Alle Gerichte (<%= dishes.length %>)</h2>
+                
+                <div style="background: white; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+                    <% dishes.forEach(function(dish) { %>
+                        <div style="padding: 20px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center;">
+                            
+                            <div>
+                                <div style="font-weight: bold; font-size: 1.1rem; color: #0f172a;"><%= dish.name %></div>
+                                <div style="color: #64748b; font-size: 0.9rem;"><%= dish.description || '-' %></div>
+                            </div>
+
+                            <div style="display: flex; align-items: center; gap: 20px;">
+                                <span style="font-weight: bold; color: #2563eb;">
+                                    € <%= dish.price.toFixed(2).replace('.', ',') %>
+                                </span>
+                                
+                                <button onclick="deleteDish('<%= dish.id %>')" class="btn btn-outline" style="border-color: #ef4444; color: #ef4444; padding: 6px 12px; font-size: 0.8rem; background: transparent;">
+                                    Löschen
+                                </button>
+                            </div>
+
+                        </div>
+                    <% }); %>
+                    
+                    <% if (dishes.length === 0) { %>
+                        <div style="padding: 30px; text-align: center; color: #94a3b8;">
+                            Noch keine Gerichte angelegt.
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        async function createDish(e) {
+            e.preventDefault();
+            const name = document.getElementById('newName').value;
+            const desc = document.getElementById('newDesc').value;
+            const price = document.getElementById('newPrice').value;
+
+            const res = await fetch('/api/dishes/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, description: desc, price })
+            });
+
+            if (res.ok) {
+                window.location.reload();
+            } else {
+                alert("Fehler beim Erstellen.");
+            }
+        }
+
+        async function deleteDish(id) {
+            if (!confirm("Gericht wirklich löschen?")) return;
+
+            const res = await fetch('/api/dishes/delete', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id })
+            });
+
+            if (res.ok) {
+                window.location.reload();
+            } else {
+                const data = await res.json();
+                alert("Fehler: " + (data.error || "Unbekannt"));
+            }
+        }
+    </script>
+
+    <%- include('partials/footer') %>
+
+</body>
+</html>

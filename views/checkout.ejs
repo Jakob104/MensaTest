@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="de">
+<%- include('partials/head') %>
+<body style="display:flex; flex-direction:column; min-height:100vh;">
+    <%- include('partials/navbar') %>
+
+    <div class="container" style="max-width: 600px; margin-top: 40px;">
+        <h1 style="text-align: center;">Abschließen 🏁</h1>
+        
+        <div class="card" style="padding: 30px; margin-top: 20px;">
+            <div id="checkout-summary" style="margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee;">
+                Lade Warenkorb...
+            </div>
+
+            <div id="date-warning" style="display:none; background: #eff6ff; color: #1e40af; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #bfdbfe;"></div>
+
+            <form id="orderForm" onsubmit="submitOrder(event)">
+                <div style="margin-bottom: 20px;">
+                    <label>Dein Name</label>
+                    <input type="text" id="name" required placeholder="Vor- und Nachname" value="<%= locals.userName || '' %>">
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label>Klasse</label>
+                    <select id="userClass" required>
+                        <option value="">Wählen...</option>
+                        <option value="1. Klasse">1. Klasse</option>
+                        <option value="2. Klasse">2. Klasse</option>
+                        <option value="3. Klasse">3. Klasse</option>
+                        <option value="4. Klasse">4. Klasse</option>
+                        <option value="5. Klasse">5. Klasse</option>
+                        <option value="Lehrer">Lehrer</option>
+                    </select>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+                    <div>
+                        <label>Datum</label>
+                        <input type="date" id="pickupDate" required>
+                    </div>
+                    <div>
+                        <label>Uhrzeit</label>
+                        <select id="pickupTime" required>
+                            <option value="">Erst Datum wählen...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn" style="width: 100%;">Bestellung aufgeben</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const dateInput = document.getElementById('pickupDate');
+        const timeSelect = document.getElementById('pickupTime');
+        const warningBox = document.getElementById('date-warning');
+        
+        let hasLunch = false; 
+        let requiredWeekday = null; 
+        const dayMap = { "Montag": 1, "Dienstag": 2, "Mittwoch": 3, "Donnerstag": 4, "Freitag": 5 };
+        const dayNames = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const cart = getCart();
+            if (cart.length === 0) {
+                window.location.href = '/warenkorb';
+                return;
+            }
+
+            // Check: Ist Mittagessen dabei?
+            const lunchItem = cart.find(i => i.type === 'lunch');
+            if (lunchItem) {
+                hasLunch = true;
+                requiredWeekday = dayMap[lunchItem.day];
+                
+                warningBox.style.display = 'block';
+                warningBox.innerHTML = `ℹ️ <strong>Mittagessen erkannt:</strong><br>Abholung erst ab <strong>11:00 Uhr</strong> möglich.<br>Gültig für: <u>${lunchItem.day}</u>.`;
+            }
+
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            document.getElementById('checkout-summary').innerHTML = `
+                <h3 style="margin:0;">Summe: € ${total.toFixed(2).replace('.', ',')}</h3>
+                <p style="margin:0; color:#64748b;">${cart.length} Positionen</p>
+            `;
+
+            dateInput.min = new Date().toISOString().split("T")[0];
+            generateTimeOptions();
+        });
+
+        dateInput.addEventListener('input', function() {
+            const date = new Date(this.value);
+            const day = date.getDay(); 
+
+            if (day === 0 || day === 6) {
+                showToast("Wochenende geschlossen! 😴", 'error');
+                this.value = '';
+                return;
+            }
+
+            if (hasLunch && requiredWeekday !== null) {
+                if (day !== requiredWeekday) {
+                    showToast(`Das Gericht ist nur für ${dayNames[requiredWeekday]}!`, 'error');
+                    this.value = '';
+                    return;
+                }
+            }
+        });
+
+        // WICHTIG: Die Zeit-Logik
+        function generateTimeOptions() {
+            timeSelect.innerHTML = '<option value="">Uhrzeit wählen...</option>';
+            
+            // Wenn Mittagessen -> Start 11:00, sonst 7:30
+            let hour = hasLunch ? 11 : 7;
+            let minute = hasLunch ? 0 : 30;
+
+            while (hour < 14 || (hour === 14 && minute <= 30)) {
+                const hStr = hour.toString().padStart(2, '0');
+                const mStr = minute.toString().padStart(2, '0');
+                
+                const opt = document.createElement('option');
+                opt.value = `${hStr}:${mStr}`;
+                opt.text = `${hStr}:${mStr} Uhr`;
+                timeSelect.appendChild(opt);
+
+                minute += 10;
+                if (minute >= 60) { minute = 0; hour++; }
+            }
+        }
+
+        async function submitOrder(e) {
+            e.preventDefault();
+            const cart = getCart();
+            const btn = e.target.querySelector('button');
+            btn.disabled = true;
+            btn.innerText = "Sende...";
+
+            try {
+                const res = await fetch('/api/bestellen', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        customerName: document.getElementById('name').value, 
+                        userClass: document.getElementById('userClass').value,
+                        pickupDate: dateInput.value,
+                        pickupTime: timeSelect.value,
+                        cart: cart 
+                    })
+                });
+
+                if (res.ok) {
+                    saveCart([]); 
+                    updateCartCount();
+                    window.location.href = '/success';
+                } else {
+                    const errData = await res.json();
+                    showToast(errData.error || "Unbekannter Fehler", 'error');
+                    btn.disabled = false;
+                    btn.innerText = "Bestellung aufgeben";
+                }
+            } catch (err) {
+                showToast("Keine Verbindung zum Server", 'error');
+                btn.disabled = false;
+            }
+        }
+    </script>
+    <%- include('partials/footer') %>
+</body>
+</html>

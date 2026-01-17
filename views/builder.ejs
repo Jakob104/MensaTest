@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="de">
+<%- include('partials/head') %>
+<body>
+    <%- include('partials/navbar') %>
+
+    <div class="container" style="max-width: 800px;">
+        <div style="margin-top: 20px; margin-bottom: 30px;">
+            <a href="/bestellen" style="text-decoration: none; color: #64748b;">&larr; Zurück zu den Snacks</a>
+        </div>
+
+        <h1 style="text-align: center; margin-bottom: 10px;">Wunsch-Weckerl 🛠️</h1>
+        <p style="text-align: center; margin-bottom: 40px;">Wähle deine Zutaten. Der Preis berechnet sich automatisch.</p>
+
+        <div class="grid-container" style="grid-template-columns: 2fr 1fr; gap: 30px; margin-top: 0;">
+            
+            <div class="card" style="padding: 30px;">
+                
+                <h3 style="border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 20px;">1. Wähle dein Brot</h3>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <label class="option-row">
+                        <input type="radio" name="base" value="Semmel" data-price="1.00" checked onchange="calcPrice()">
+                        <span>Semmel</span>
+                        <span class="price">+ € 1,00</span>
+                    </label>
+                    <label class="option-row">
+                        <input type="radio" name="base" value="Kornspitz" data-price="1.50" onchange="calcPrice()">
+                        <span>Kornspitz</span>
+                        <span class="price">+ € 1,50</span>
+                    </label>
+                    <label class="option-row">
+                        <input type="radio" name="base" value="Laugenstange" data-price="1.50" onchange="calcPrice()">
+                        <span>Laugenstange</span>
+                        <span class="price">+ € 1,50</span>
+                    </label>
+                </div>
+
+                <h3 style="border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 20px; margin-top: 30px;">2. Der Belag</h3>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <label class="option-row">
+                        <input type="checkbox" class="ingredient" value="Schinken" data-price="0.80" onchange="calcPrice()">
+                        <span>Schinken</span>
+                        <span class="price">+ € 0,80</span>
+                    </label>
+                    <label class="option-row">
+                        <input type="checkbox" class="ingredient" value="Salami" data-price="0.80" onchange="calcPrice()">
+                        <span>Salami</span>
+                        <span class="price">+ € 0,80</span>
+                    </label>
+                    <label class="option-row">
+                        <input type="checkbox" class="ingredient" value="Gouda Käse" data-price="0.60" onchange="calcPrice()">
+                        <span>Gouda Käse</span>
+                        <span class="price">+ € 0,60</span>
+                    </label>
+                    <label class="option-row">
+                        <input type="checkbox" class="ingredient" value="Extrawurst" data-price="0.60" onchange="calcPrice()">
+                        <span>Extrawurst</span>
+                        <span class="price">+ € 0,60</span>
+                    </label>
+                    <label class="option-row">
+                        <input type="checkbox" class="ingredient" value="Thunfisch" data-price="1.00" onchange="calcPrice()">
+                        <span>Thunfisch Aufstrich</span>
+                        <span class="price">+ € 1,00</span>
+                    </label>
+                </div>
+
+                <h3 style="border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; margin-bottom: 20px; margin-top: 30px;">3. Extras (Gemüse)</h3>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <label class="option-row">
+                        <input type="checkbox" class="ingredient" value="Salatblatt" data-price="0.20" onchange="calcPrice()">
+                        <span>Salatblatt</span>
+                        <span class="price">+ € 0,20</span>
+                    </label>
+                    <label class="option-row">
+                        <input type="checkbox" class="ingredient" value="Gurke" data-price="0.20" onchange="calcPrice()">
+                        <span>Gurke</span>
+                        <span class="price">+ € 0,20</span>
+                    </label>
+                    <label class="option-row">
+                        <input type="checkbox" class="ingredient" value="Tomate" data-price="0.30" onchange="calcPrice()">
+                        <span>Tomate</span>
+                        <span class="price">+ € 0,30</span>
+                    </label>
+                    <label class="option-row">
+                        <input type="checkbox" class="ingredient" value="Paprika" data-price="0.30" onchange="calcPrice()">
+                        <span>Paprika</span>
+                        <span class="price">+ € 0,30</span>
+                    </label>
+                    <label class="option-row">
+                        <input type="checkbox" class="ingredient" value="Mayo" data-price="0.20" onchange="calcPrice()">
+                        <span>Mayo / Ketchup</span>
+                        <span class="price">+ € 0,20</span>
+                    </label>
+                </div>
+
+            </div>
+
+            <div style="position: sticky; top: 100px; height: fit-content;">
+                <div class="card" style="padding: 30px; border: 2px solid #2563eb;">
+                    <h3 style="margin-top: 0;">Dein Weckerl</h3>
+                    
+                    <ul id="summary-list" style="padding-left: 20px; color: #64748b; margin-bottom: 20px;">
+                        <li>Semmel</li>
+                    </ul>
+
+                    <div style="border-top: 2px solid #f1f5f9; padding-top: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <span style="font-weight: bold;">Gesamt:</span>
+                        <span id="total-price" style="font-size: 1.8rem; font-weight: 800; color: #2563eb;">€ 1,00</span>
+                    </div>
+
+                    <button onclick="addCustomSandwich()" class="btn" style="width: 100%;">
+                        In den Warenkorb
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <style>
+        .option-row {
+            display: flex; 
+            align-items: center; 
+            padding: 10px; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 8px; 
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option-row:hover { background: #f8fafc; border-color: #2563eb; }
+        .option-row input { margin-right: 15px; width: 20px; height: 20px; }
+        .option-row .price { margin-left: auto; font-weight: bold; color: #64748b; }
+    </style>
+
+    <script>
+        let currentTotal = 0;
+        let currentName = "";
+
+        function calcPrice() {
+            let total = 0;
+            let summaryHTML = "";
+            let ingredientsList = [];
+
+            // 1. Basis Brot
+            const base = document.querySelector('input[name="base"]:checked');
+            if (base) {
+                total += parseFloat(base.dataset.price);
+                ingredientsList.push(base.value);
+                summaryHTML += `<li>${base.value}</li>`;
+            }
+
+            // 2. Zutaten
+            const checkboxes = document.querySelectorAll('.ingredient:checked');
+            checkboxes.forEach(box => {
+                total += parseFloat(box.dataset.price);
+                ingredientsList.push(box.value);
+                summaryHTML += `<li>${box.value}</li>`;
+            });
+
+            // Update UI
+            document.getElementById('total-price').innerText = "€ " + total.toFixed(2).replace('.', ',');
+            document.getElementById('summary-list').innerHTML = summaryHTML;
+
+            currentTotal = total;
+            // Name generieren: "Wunsch-Weckerl (Semmel, Salami, Gurke)"
+            currentName = "Wunsch-Weckerl (" + ingredientsList.join(', ') + ")";
+        }
+
+        function addCustomSandwich() {
+            // Wir nutzen eine Zufalls-ID, damit man mehrere verschiedene Wunsch-Weckerl bestellen kann
+            const randomId = 'custom-' + Math.floor(Math.random() * 10000);
+            
+            // Funktion aus footer.ejs aufrufen
+            // Typ ist 'snack' (keine 11:00 Sperre)
+            addToCart(randomId, currentName, currentTotal, 'snack');
+            
+            // Zurück zur Übersicht
+            setTimeout(() => {
+                window.location.href = '/bestellen';
+            }, 500);
+        }
+
+        // Beim Laden einmal berechnen
+        calcPrice();
+    </script>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

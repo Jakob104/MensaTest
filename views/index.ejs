@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="de">
+<%- include('partials/head') %>
+<head>
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+            padding: 80px 20px;
+            border-radius: 0 0 40px 40px;
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(37, 99, 235, 0.1);
+            color: #2563eb;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            border: 1px solid rgba(37, 99, 235, 0.2);
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(to right, #0f172a, #2563eb);
+            -webkit-background-clip: text;
+            background-clip: text; /* FIX */
+            -webkit-text-fill-color: transparent;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            background: #eff6ff;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            margin: 0 auto 20px auto;
+            color: #2563eb;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .cta-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <%- include('partials/navbar') %>
+
+    <main>
+        <div class="hero-section">
+            <div class="container">
+                <div class="hero-badge">⚡ Online vorbestellen & abholen</div>
+
+                <h1 class="hero-title">
+                    Dein Schulbuffet.<br>
+                    Jetzt digital.
+                </h1>
+                
+                <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto; color: #64748b;">
+                    Schluss mit Warten. Bestelle dein Mittagessen oder deine Jause bequem am Handy und hol es dir in der Pause einfach ab.
+                </p>
+                
+                <div class="cta-group">
+                    <a href="/wochenplan" class="btn" style="padding: 16px 32px; font-size: 1.1rem; box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);">
+                        🍽️ Zum Wochenplan
+                    </a>
+                    <a href="/bestellen" class="btn btn-outline" style="padding: 16px 32px; font-size: 1.1rem; background: white;">
+                        🥨 Snacks & Getränke
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="grid-container" style="margin-bottom: 80px;">
+                <div class="card" style="text-align: center; padding: 40px 20px;">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Keine Wartezeit</h3>
+                    <p>Deine Pause ist kurz. Verbring sie nicht in der Schlange. Komm einfach vorbei und nimm dein Essen mit.</p>
+                </div>
+
+                <div class="card" style="text-align: center; padding: 40px 20px;">
+                    <div class="feature-icon">🥗</div>
+                    <h3>Frisch gekocht</h3>
+                    <p>Jeden Tag zwei Menüs zur Auswahl. Frisch zubereitet von Papa, direkt für dich.</p>
+                </div>
+
+                <div class="card" style="text-align: center; padding: 40px 20px;">
+                    <div class="feature-icon">📱</div>
+                    <h3>Easy Order</h3>
+                    <p>Egal ob am Handy, Tablet oder Laptop. Mit wenigen Klicks ist dein Essen reserviert.</p>
+                </div>
+            </div>
+
+            <div style="background: #0f172a; color: white; border-radius: 24px; padding: 60px 20px; text-align: center; margin-bottom: 60px;">
+                <h2 style="color: white; margin-bottom: 10px;">Hunger bekommen?</h2>
+                <p style="color: #94a3b8; margin-bottom: 30px;">Schau dir an, was es heute Leckeres gibt.</p>
+                <a href="/bestellen" class="btn" style="background: white; color: #0f172a;">Jetzt bestellen &rarr;</a>
+            </div>
+        </div>
+    </main>
+
+    <%- include('partials/footer') %>
+
+</body>
+</html>

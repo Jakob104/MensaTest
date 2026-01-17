@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="de">
+<%- include('partials/head') %>
+<body>
+
+    <%- include('partials/navbar') %>
+
+    <div class="container">
+        <h1 style="text-align:center; margin-bottom: 10px;">Wochenplan 📅</h1>
+        <p style="text-align:center; margin-bottom: 40px;">Nur von 11:00 bis 14:30 Uhr abholbar.</p>
+
+        <div style="display: flex; flex-direction: column; gap: 30px;">
+
+            <% const days = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag"]; %>
+            
+            <% days.forEach(day => { %>
+                <% const dayMeals = plan.filter(p => p.day === day); %>
+
+                <% if (dayMeals.length > 0) { %>
+                    <div style="background: white; border-radius: 16px; overflow: hidden; box-shadow: var(--shadow-md); border: 1px solid #e2e8f0;">
+                        
+                        <div style="background: #0f172a; color: white; padding: 12px; text-align: center; font-weight: bold; font-size: 1.3rem; letter-spacing: 1px;">
+                            <%= day %>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                            
+                            <% dayMeals.forEach((entry, index) => { %>
+                                <div style="padding: 25px; display: flex; flex-direction: column; justify-content: space-between; border-right: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9;">
+                                    <div>
+                                        <span style="font-size: 0.75rem; text-transform: uppercase; color: #2563eb; font-weight: bold; letter-spacing: 1px; background: #eff6ff; padding: 3px 8px; border-radius: 4px;">
+                                            <%= entry.menuType %>
+                                        </span>
+                                        <h3 style="margin: 10px 0 5px 0; color: #0f172a; font-size: 1.4rem;"><%= entry.dish.name %></h3>
+                                        <p style="margin: 0; color: #64748b; font-size: 0.95rem; line-height: 1.5;"><%= entry.dish.description || "Frisch zubereitet" %></p>
+                                    </div>
+
+                                    <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+                                        <span style="font-weight: bold; color: #0f172a; font-size: 1.2rem;">€ <%= entry.dish.price.toFixed(2).replace('.', ',') %></span>
+                                        
+                                        <button class="btn" style="padding: 8px 20px; font-size: 0.9rem; border-radius: 20px;" 
+                                            onclick="addToCart('<%= entry.dish.id %>', '<%= entry.dish.name %>', <%= entry.dish.price %>, 'lunch', '<%= entry.day %>')">
+                                            In den Korb +
+                                        </button>
+                                    </div>
+                                </div>
+                            <% }); %>
+
+                        </div>
+                    </div>
+                <% } %>
+            <% }); %>
+
+            <% if (plan.length === 0) { %>
+                <div style="text-align: center; padding: 50px; background: white; border-radius: 16px; box-shadow: var(--shadow-sm);">
+                    <div style="font-size: 3rem; margin-bottom: 10px;">🍳</div>
+                    <h2>Noch kein Plan online</h2>
+                    <p>Schau später wieder vorbei!</p>
+                </div>
+            <% } %>
+
+        </div>
+        
+        <div style="height: 50px;"></div>
+    </div>
+
+    <%- include('partials/footer') %>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="de">
+<%- include('partials/head') %>
+<body style="display:flex; flex-direction:column; min-height:100vh;">
+    <%- include('partials/navbar') %>
+
+    <div class="container" style="margin-top: 40px;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h1 style="margin: 0;">Hallo, <%= user.name %>!</h1>
+            <a href="/logout" class="btn btn-outline" style="border-color: #ef4444; color: #ef4444;">Ausloggen</a>
+        </div>
+
+        <div class="grid-container" style="grid-template-columns: 1fr 1fr; margin-top: 0;">
+            
+            <div class="card" style="padding: 30px; background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%); color: white;">
+                <h3 style="margin-top: 0; color: white;">Dein Punktestand</h3>
+                <div style="font-size: 3rem; font-weight: 800; margin: 10px 0;">
+                    <%= user.points %> <span style="font-size: 1rem; font-weight: normal;">Punkte</span>
+                </div>
+                <p style="color: rgba(255,255,255,0.8);">Sammle 300 Punkte für ein Gratis-Goodie!</p>
+                
+                <div style="background: rgba(255,255,255,0.2); height: 10px; border-radius: 10px; margin-top: 20px; overflow: hidden;">
+                    <div style="background: #4ade80; height: 100%; width: <%= Math.min((user.points / 300) * 100, 100) %>%;"></div>
+                </div>
+
+                <% if (user.points >= 300) { %>
+                    <button onclick="tryRedeem()" style="margin-top: 20px; background: white; color: #2563eb; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                        🎁 Jetzt Gratis-Snack einlösen!
+                    </button>
+                <% } else { %>
+                    <div style="margin-top: 20px; font-size: 0.9rem; color: rgba(255,255,255,0.7);">
+                        Noch <%= 300 - user.points %> Punkte bis zur Belohnung.
+                    </div>
+                <% } %>
+            </div>
+
+            <div class="card" style="padding: 30px; max-height: 400px; overflow-y: auto;">
+                <h3 style="margin-top: 0;">Deine letzten Bestellungen</h3>
+                <% if (user.orders.length === 0) { %>
+                    <p style="color: #64748b;">Du hast noch nichts bestellt.</p>
+                <% } else { %>
+                    <table style="width: 100%; font-size: 0.9rem; box-shadow: none; margin-top: 10px;">
+                        <% user.orders.forEach(order => { %>
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 15px 0;">
+                                    <strong><%= new Date(order.createdAt).toLocaleDateString() %></strong><br>
+                                    <span style="color: #64748b;"><%= order.items %></span>
+                                </td>
+                                <td style="text-align: right; font-weight: bold; vertical-align: top; padding-top: 15px;">
+                                    € <%= order.totalPrice.toFixed(2) %>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </table>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function tryRedeem() {
+            // Unser neues Modal benutzen!
+            showConfirm(
+                "Punkte einlösen?", 
+                "Möchtest du 300 Punkte für einen Gratis-Snack ausgeben? Die Bestellung geht sofort an die Küche.", 
+                async () => {
+                    // Wird nur ausgeführt, wenn man "Ja" klickt
+                    try {
+                        const res = await fetch('/api/redeem', { method: 'POST' });
+                        if (res.ok) {
+                            alert("🎉 Belohnung eingelöst! Hol dir deinen Snack in der Küche ab.");
+                            window.location.reload();
+                        } else {
+                            showToast("Fehler beim Einlösen", "error");
+                        }
+                    } catch (e) {
+                        showToast("Verbindungsfehler", "error");
+                    }
+                }
+            );
+        }
+    </script>
+    <%- include('partials/footer') %>
+</body>
+</html>

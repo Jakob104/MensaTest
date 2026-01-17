@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de">
+<%- include('partials/head') %>
+<body style="display:flex; flex-direction:column; min-height:100vh;">
+    <%- include('partials/navbar') %>
+
+    <div class="container" style="max-width: 400px; margin-top: 50px; text-align: center;">
+        
+        <h1 style="color: #2563eb;">Willkommen zurück 👋</h1>
+
+        <% if (locals.error) { %>
+            <div style="background: #fee2e2; color: #b91c1c; padding: 10px; border-radius: 8px; margin-bottom: 20px;">
+                <%= error %>
+            </div>
+        <% } %>
+
+        <div style="background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 30px;">
+            <h2 style="margin-top: 0; font-size: 1.2rem;">Schüler Login</h2>
+            <form action="/login-user" method="POST" style="text-align: left;">
+                <label style="font-weight: bold; display: block; margin-bottom: 5px;">Email</label>
+                <input type="email" name="email" required style="width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #e2e8f0; border-radius: 8px;">
+
+                <label style="font-weight: bold; display: block; margin-bottom: 5px;">Passwort</label>
+                <input type="password" name="password" required style="width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #e2e8f0; border-radius: 8px;">
+
+                <button type="submit" class="btn" style="width: 100%;">Einloggen</button>
+            </form>
+            <p style="margin-top: 15px; font-size: 0.9rem;">
+                Neu hier? <a href="/register" style="color: #2563eb;">Account erstellen</a>
+            </p>
+        </div>
+
+        <details style="text-align: left; color: #64748b; font-size: 0.9rem; cursor: pointer;">
+            <summary>Ich bin Administrator</summary>
+            <form action="/login" method="POST" style="margin-top: 10px;">
+                <input type="password" name="password" placeholder="Admin Passwort" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                <button type="submit" class="btn btn-outline" style="padding: 8px 15px; font-size: 0.8rem;">Go</button>
+            </form>
+        </details>
+
+    </div>
+    <%- include('partials/footer') %>
+</body>
+</html>

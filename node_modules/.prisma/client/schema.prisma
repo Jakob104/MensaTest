@@ -1,0 +1,67 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// 1. User (Schüler/Lehrer)
+model User {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  password String
+  name     String
+  points   Int     @default(50) // 50 Punkte Startbonus
+  orders   Order[] // Historie der Bestellungen
+}
+
+// 2. Kiosk Produkte (Snacks)
+model Product {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  price       Float
+  category    String  
+  image       String? 
+}
+
+// 3. Mittagsgerichte (Wochenplan)
+model Dish {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
+  price       Float
+  entries     WeeklyEntry[]
+}
+
+// 4. Wochenplan Eintrag
+model WeeklyEntry {
+  id        Int      @id @default(autoincrement())
+  day       String   
+  menuType  String   
+  
+  dishId    Int
+  dish      Dish     @relation(fields: [dishId], references: [id])
+}
+
+// 5. Bestellungen
+model Order {
+  id           Int      @id @default(autoincrement())
+  customerName String
+  userClass    String?
+  pickupDate   String?
+  pickupTime   String?
+  totalPrice   Float
+  status       String   @default("NEU") 
+  createdAt    DateTime @default(now())
+  items        String   
+
+  // Verknüpfung zum User (Optional, da man auch ohne Account bestellen könnte)
+  userId       Int?
+  user         User?    @relation(fields: [userId], references: [id])
+}
